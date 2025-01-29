@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import re
 
 app = Flask(__name__)
-CORS(app, origins=["https://dream-analyzer-8l8c-61v6z88x1-shamods-projects-06dc8f19.vercel.app"])
+CORS(app, resources={r"/analyze": {"origins": "*"}})  # Allow all origins for development
 
 # Sentiment analysis keywords
 good_keywords = [ "joy", "happiness", "wonder", "fascination", "smile", "support", "serenity", "float", "calm",
@@ -103,41 +104,59 @@ categories = {
     }
 }
 
-def classify_dream(dream_text):
-    # Check sentiment keywords
-    good_matches = [word for word in good_keywords if word in dream_text.lower()]
-    bad_matches = [word for word in bad_keywords if word in dream_text.lower()]
+# Precompile category patterns
+category_patterns = {}
+for category, subcats in categories.items():
+    category_patterns[category] = {}
+    for subcat, keywords in subcats.items():
+        category_patterns[category][subcat] = [
+            re.compile(rf'\b{re.escape(kw)}\b', re.IGNORECASE) for kw in keywords
+        ]
 
-    # Determine sentiment
-    if len(good_matches) > len(bad_matches):
+def classify_dream(text):
+    # Sentiment analysis
+    good_count = sum(1 for pattern in good_patterns if pattern.search(text))
+    bad_count = sum(1 for pattern in bad_patterns if pattern.search(text))
+    
+    sentiment = "Neutral"
+    if good_count > bad_count:
         sentiment = "Positive"
-    elif len(bad_matches) > len(good_matches):
+    elif bad_count > good_count:
         sentiment = "Negative"
-    else:
-        sentiment = "Neutral"
 
-    # Find matching categories
-    predicted_categories = {}
-    for category, subcategories in categories.items():
-        matched_subcategories = {}
-        for subcategory, keywords in subcategories.items():
-            matched_keywords = [word for word in keywords if word in dream_text.lower()]
-            if matched_keywords:
-                matched_subcategories[subcategory] = matched_keywords
-        if matched_subcategories:
-            predicted_categories[category] = matched_subcategories
-
-    return sentiment, predicted_categories
+    # Category analysis
+    results = {}
+    for category, subcats in category_patterns.items():
+        category_results = {}
+        for subcat, patterns in subcats.items():
+            matches = []
+            for pattern in patterns:
+                if pattern.search(text):
+                    matches.append(pattern.pattern.replace(r'\b', '').replace('(?i)', '').lower())
+            if matches:
+                category_results[subcat] = list(set(matches))
+        if category_results:
+            results[category] = category_results
+            
+    return sentiment, results
 
 @app.route('/analyze', methods=['POST'])
-def analyze_dream():
-    data = request.json
-    dream_text = data.get('dream', '')
-    sentiment, categories = classify_dream(dream_text)
-    return jsonify({
-        'sentiment': sentiment,
-        'categories': categories
-    })
+def analyze():
+    try:
+        data = request.get_json()
+        if not data or 'dream' not in data:
+            return jsonify({"error": "Missing dream text"}), 400
+        
+        text = data['dream'].lower()
+        sentiment, categories = classify_dream(text)
+        
+        return jsonify({
+            "sentiment": sentiment,
+            "categories": categories
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
