@@ -8,7 +8,7 @@ from PIL import Image
 import base64
 
 # Load your logo image (replace 'logo.png' with your actual file path)
-logo_path = r"E:\AlGo\dreams_n\logo.png"
+logo_path = r"logo.png"
 logo_image = Image.open(logo_path)
 
 
