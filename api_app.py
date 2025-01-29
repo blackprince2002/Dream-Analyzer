@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, origins=["https://dream-analyzer-8l8c-61v6z88x1-shamods-projects-06dc8f19.vercel.app/"])
+CORS(app, origins=["https://dream-analyzer-8l8c-git-main-shamods-projects-06dc8f19.vercel.app"])
 
 # Sentiment analysis keywords
 good_keywords = [ "joy", "happiness", "wonder", "fascination", "smile", "support", "serenity", "float", "calm",
