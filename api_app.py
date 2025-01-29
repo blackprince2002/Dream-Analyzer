@@ -3,12 +3,12 @@ from flask_cors import CORS
 import re
 import os
 
-port = int(os.environ.get("PORT", 8080))  # Railway provides a dynamic port number
-app.run(host='0.0.0.0', port=port)  # Make sure it's listening on all network interfaces
-
 
 app = Flask(__name__)
 CORS(app, resources={r"/analyze": {"origins": "*"}})  # Allow all origins for development
+
+port = int(os.environ.get("PORT", 8080))  # Railway provides a dynamic port number
+app.run(host='0.0.0.0', port=port)  # Make sure it's listening on all network interfaces
 
 # Sentiment analysis keywords
 good_keywords = [ "joy", "happiness", "wonder", "fascination", "smile", "support", "serenity", "float", "calm",
