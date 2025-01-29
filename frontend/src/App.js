@@ -13,7 +13,7 @@ function App() {
   // Function to handle the submit and call Flask backend
   const handleAnalyzeDream = () => {
     setIsLoading(true);  // Set loading state to true when the request starts
-    axios.post('https://dream-analyzer-production.up.railway.app/analyze', { dream: dreamText })
+    axios.post('https://dream-analyzer-production.up.railway.app', { dream: dreamText })
       .then((res) => {
         setResponse(res.data); // Set the response from the backend
         console.log(res.data);  // Optionally log the response
