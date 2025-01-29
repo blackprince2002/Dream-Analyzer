@@ -1,0 +1,176 @@
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+.App {
+  background-color: #121212;  /* Full black background */
+  color: #e0e0e0;  /* Light text color for contrast */
+  font-family: 'Inter', sans-serif;  /* Softer, modern font */
+  position: relative; /* Allow absolute positioning of Dream Analyzer 1.0 (BETA) */
+  transition: background-color 0.3s ease-in-out; /* Smooth background transition */
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  position: relative; /* Allow child elements like "Dream Analyzer 1.0" to be positioned relative to the header */
+  opacity: 0;
+  animation: fadeIn 1s ease-in-out forwards; /* Smooth fade-in effect */
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+textarea {
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #555;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  background-color: #333;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+textarea:focus {
+  border-color: #007bff; /* Focus effect with blue border */
+}
+
+button {
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth button transition */
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* Smooth scaling effect on hover */
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.result-container {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.sentiment {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sentiment span {
+  color: #ff0000;
+}
+
+.sentiment span.positive {
+  color: #28a745;
+}
+
+.sentiment span.negative {
+  color: #dc3545;
+}
+
+.categories {
+  width: 100%;
+}
+
+.category {
+  margin-top: 20px;
+}
+
+.category h3 {
+  font-size: 22px;
+  color: #007bff;
+}
+
+.category-content {
+  margin-left: 20px;
+}
+
+.category-content h5 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #f8f9fa;
+}
+
+.category-content ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.category-content li {
+  font-size: 16px;
+  padding: 3px 0;
+  color: #f1f1f1;
+}
+
+.category-content li::before {
+  content: "• ";
+  color: #007bff;
+}
+
+.powered-by {
+  margin-top: -75px;
+  text-align: center;
+  position: relative;
+  margin-left: 350px; /* Slight right shift for Powered by Algo Craft */
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards 1s; /* Delayed fade-in effect */
+}
+
+.powered-by img {
+  width: 150px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+/* Move Dream Analyzer 1.0 (BETA) to the top-right corner and reduce its font size */
+.dream-analyzer-beta {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards 0.5s; /* Delayed fade-in effect */
+}
+
+.powered-by {
+  text-align: left;
+}
+
+/* Fade-in animation for smoother appearance */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth transition for background changes */
+.App-header {
+  transition: opacity 1s ease-in-out;
+}
