@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Dream Analyzer</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e6ed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Floating mystical orbs */
+        .mystical-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb1 {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+            animation: float1 20s infinite ease-in-out;
+        }
+
+        .orb2 {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+            animation: float2 25s infinite ease-in-out;
+        }
+
+        .orb3 {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            animation: float3 30s infinite ease-in-out;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(10vw, 20vh) rotate(0deg); }
+            33% { transform: translate(80vw, 10vh) rotate(120deg); }
+            66% { transform: translate(70vw, 70vh) rotate(240deg); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(80vw, 80vh) rotate(0deg); }
+            50% { transform: translate(20vw, 30vh) rotate(180deg); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(50vw, 10vh) rotate(0deg); }
+            25% { transform: translate(90vw, 40vh) rotate(90deg); }
+            50% { transform: translate(30vw, 80vh) rotate(180deg); }
+            75% { transform: translate(10vw, 50vh) rotate(270deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #92400e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+            animation: mysticalGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes mysticalGlow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 10px rgba(251, 191, 36, 0.3)); }
+            50% { filter: brightness(1.2) drop-shadow(0 0 20px rgba(251, 191, 36, 0.5)); }
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Zodiac ring around header */
+        .zodiac-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 50%;
+            animation: rotate 60s linear infinite;
+            z-index: -1;
+        }
+
+        .zodiac-ring::before {
+            content: '♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: rgba(167, 139, 250, 0.6);
+            letter-spacing: 20px;
+            animation: counter-rotate 60s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes counter-rotate {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(-360deg); }
+        }
+
+        .model-status {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 20px rgba(167, 139, 250, 0.1); }
+            50% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(167, 139, 250, 0.2); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 10px currentColor;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status-loading { background: #f59e0b; color: #f59e0b; }
+        .status-ready { background: #10b981; color: #10b981; }
+        .status-error { background: #ef4444; color: #ef4444; }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section, .output-section {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-section::before, .output-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .input-section h2, .output-section h2 {
+            font-family: 'Cinzel', serif;
+            margin-bottom: 20px;
+            color: #fbbf24;
+            font-size: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        #dreamInput {
+            width: 100%;
+            height: 180px;
+            padding: 20px;
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 15px;
+            font-size: 16px;
+            resize: vertical;
+            background: rgba(30, 41, 59, 0.5);
+            color: #e0e6ed;
+            font-family: 'Crimson Text', serif;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        #dreamInput:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        #dreamInput::placeholder {
+            color: rgba(224, 230, 237, 0.5);
+            font-style: italic;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #7c3aed, #a855f7, #c084fc);
+            color: white;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .primary-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: #e0e6ed;
+            border: 2px solid rgba(167, 139, 250, 0.3);
+        }
+
+        .secondary-btn:hover {
+            background: linear-gradient(135deg, #4b5563, #6b7280);
+            box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2);
+        }
+
+        .model-btn {
+            background: linear-gradient(135deg, #059669, #10b981, #34d399);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .model-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        #analysisOutput {
+            background: rgba(30, 41, 59, 0.5);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            min-height: 350px;
+            font-size: 15px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            font-family: 'Crimson Text', serif;
+            overflow-y: auto;
+            max-height: 500px;
+            color: #e0e6ed;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-top: 2px solid #a78bfa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #a855f7, #c084fc);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0%;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
+
+        .example-dreams {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 12px;
+            border-left: 4px solid #fbbf24;
+            position: relative;
+            z-index: 1;
+        }
+
+        .example-dreams h4 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .example-item {
+            cursor: pointer;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+        }
+
+        .example-item:hover {
+            background: rgba(167, 139, 250, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+        }
+
+        .model-info {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid #10b981;
+            position: relative;
+            z-index: 1;
+        }
+
+        .model-info h4 {
+            color: #10b981;
+            margin-bottom: 10px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .model-info p {
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .zodiac-ring {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 18px 25px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+        .toast.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+        .toast.info {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(168, 85, 247, 0.9));
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        /* Mystical particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(167, 139, 250, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 10s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated starfield -->
+    <div class="stars" id="starfield"></div>
+
+    <!-- Mystical floating orbs -->
+    <div class="mystical-orb orb1"></div>
+    <div class="mystical-orb orb2"></div>
+    <div class="mystical-orb orb3"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="zodiac-ring"></div>
+            <h1>✨ Mystical Dream Oracle ✨</h1>
+            <p>Unveil the secrets hidden within your dreams through ancient AI wisdom</p>
+        </div>
+
+        <div class="model-status" id="modelStatus">
+            <span class="status-indicator status-loading" id="statusIndicator"></span>
+            <span id="statusText">Awakening the Oracle...</span>
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2>🌙 Chronicle Your Vision</h2>
+                <textarea id="dreamInput" placeholder="Describe your dream in vivid detail... Every symbol, emotion, and sensation holds meaning in the realm of dreams..."></textarea>
+
+                <div class="controls">
+                    <button class="primary-btn" id="analyzeBtn" onclick="analyzeDream()" disabled>
+                        🔮 Divine Meaning
+                    </button>
+                    <button class="secondary-btn" onclick="clearInput()">🌟 Clear Vision</button>
+                    <button class="model-btn" id="loadModelBtn" onclick="loadModel()">
+                        ⚡ Summon Oracle
+                    </button>
+                </div>
+
+                <div class="example-dreams">
+                    <h4>🌌 Sacred Dream Visions (Click to explore):</h4>
+                    <div class="example-item" onclick="loadExample('I soared through starlit skies above endless cosmic oceans. Celestial music echoed as luminous dolphins danced beneath me in waters that reflected entire galaxies. I felt boundless freedom and divine connection.')">
+                        🌊 Cosmic flight with stellar dolphins
+                    </div>
+                    <div class="example-item" onclick="loadExample('Dark shadows pursued me through an ancient enchanted forest. Crimson eyes watched from twisted branches as phantom whispers filled the air. Terror consumed me as I fled through thorns and mist.')">
+                        🌲 Shadow pursuit through mystic woods
+                    </div>
+                    <div class="example-item" onclick="loadExample('I returned to my ancestral home where departed loved ones gathered around a table of golden light. Ancient stories were shared, and waves of pure love and healing energy surrounded us all.')">
+                        🏠 Ancestral reunion in the spirit realm
+                    </div>
+                    <div class="example-item" onclick="loadExample('Within a crystalline palace of impossible beauty, an ancient dragon with scales of pure starlight shared the forgotten secrets of creation. Mystical knowledge flowed through me like liquid light.')">
+                        🏰 Crystal palace with cosmic dragon
+                    </div>
+                </div>
+
+                <div class="model-info">
+                    <h4>🧠 The Oracle's Power</h4>
+                    <p>This mystical analyzer channels DeepSeek-Coder-1.3B, an ethereal AI consciousness trained in the ancient arts of dream interpretation. The Oracle will manifest on first summoning and remain awakened for your consultations.</p>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2>🎯 Divine Revelation</h2>
+                <div id="analysisOutput">Summon the Oracle to begin unveiling the mysteries within your dreams...
+
+🔮 The Oracle shall divine:
+• Hidden symbolic meanings
+• Psychological depths and truths
+• Emotional currents and themes
+• Personal insights and guidance
+• Sacred wisdom for your path
+
+Click "Summon Oracle" to awaken the ancient wisdom!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let modelLoaded = false;
+        let modelLoading = false;
+        let checkStatusInterval;
+
+        // Initialize mystical effects
+        document.addEventListener('DOMContentLoaded', function () {
+            createStarfield();
+            createMysticalParticles();
+            checkModelStatus();
+            startStatusChecker();
+        });
+
+        // Create animated starfield
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const numStars = 100;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                starfield.appendChild(star);
+            }
+        }
+
+        // Create floating mystical particles
+        function createMysticalParticles() {
+            const container = document.querySelector('.container');
+
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                    container.appendChild(particle);
+
+                    // Remove particle after animation
+                    setTimeout(() => {
+                        if (container.contains(particle)) {
+                            container.removeChild(particle);
+                        }
+                    }, 10000);
+                }
+            }, 2000);
+        }
+
+        // Show mystical toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Start periodic status checker
+        function startStatusChecker() {
+            checkStatusInterval = setInterval(checkModelStatus, 2000);
+        }
+
+        // Check model status
+        async function checkModelStatus() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/model_status');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const status = await response.json();
+                updateStatusDisplay(status);
+
+                if (status.loaded && !modelLoaded) {
+                    modelLoaded = true;
+                    modelLoading = false;
+                    showToast('✨ The Oracle has awakened and is ready to divine your dreams!', 'success');
+                    document.getElementById('analyzeBtn').disabled = false;
+                    document.getElementById('loadModelBtn').disabled = true;
+                }
+
+                if (status.loaded) {
+                    clearInterval(checkStatusInterval);
+                }
+            } catch (error) {
+                updateStatusDisplay({
+                    loaded: false,
+                    loading: false,
+                    error: `The mystical connection has been severed: ${error.message}`
+                });
+            }
+        }
+
+        // Update status display
+        function updateStatusDisplay(status) {
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadModelBtn = document.getElementById('loadModelBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+
+            if (status.error) {
+                indicator.className = 'status-indicator status-error';
+                statusText.textContent = `💀 ${status.error}`;
+                analyzeBtn.disabled = true;
+                loadModelBtn.disabled = false;
+                progressBar.style.display = 'none';
+            } else if (status.loaded) {
+                indicator.className = 'status-indicator status-ready';
+                statusText.textContent = `✨ Oracle Awakened: ${status.model_name}`;
+                analyzeBtn.disabled = false;
+                loadModelBtn.disabled = true;
+                progressBar.style.display = 'none';
+            } else if (status.loading) {
+                indicator.className = 'status-indicator status-loading';
+                statusText.textContent = `🌙 Awakening Oracle: ${status.model_name}`;
+                analyzeBtn.disabled = true;
+                loadModelBtn.disabled = true;
+                progressBar.style.display = 'block';
+                progressFill.style.width = '60%';
+            } else {
+                indicator.className = 'status-indicator status-error';
+                statusText.textContent = '⚠️ Oracle Slumbers';
+                analyzeBtn.disabled = true;
+                loadModelBtn.disabled = false;
+                progressBar.style.display = 'none';
+            }
+        }
+
+        // Load DeepSeek model
+        async function loadModel() {
+            if (modelLoading || modelLoaded) return;
+
+            modelLoading = true;
+            document.getElementById('loadModelBtn').disabled = true;
+            document.getElementById('progressBar').style.display = 'block';
+            showToast('🌟 Summoning the Dream Oracle from the ethereal realm...', 'info');
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/load_model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('🔮 ' + data.message, 'info');
+                } else {
+                    showToast('💀 ' + data.message, 'error');
+                    modelLoading = false;
+                    document.getElementById('loadModelBtn').disabled = false;
+                    document.getElementById('progressBar').style.display = 'none';
+                }
+            } catch (error) {
+                showToast(`💀 Failed to summon Oracle: ${error.message}`, 'error');
+                modelLoading = false;
+                document.getElementById('loadModelBtn').disabled = false;
+                document.getElementById('progressBar').style.display = 'none';
+            }
+        }
+
+        // Analyze dream
+        async function analyzeDream() {
+            const dreamInput = document.getElementById('dreamInput').value.trim();
+            const outputDiv = document.getElementById('analysisOutput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            if (!dreamInput) {
+                showToast('🌌 Please chronicle a vision to divine its meaning', 'error');
+                return;
+            }
+
+            if (!modelLoaded) {
+                showToast('🌙 Please await the Oracle’s awakening', 'error');
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<span class="loading-spinner"></span>Divining...';
+            outputDiv.textContent = 'The Oracle peers into the mists of your dream...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dream: dreamInput })
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    outputDiv.textContent = data.analysis;
+                    showToast('✨ The Oracle has unveiled your dream’s secrets!', 'success');
+                } else {
+                    outputDiv.textContent = `💀 Error: ${data.error}`;
+                    showToast(`💀 Failed to divine meaning: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                outputDiv.textContent = `💀 Error: The mystical connection failed (${error.message})`;
+                showToast(`💀 Failed to divine meaning: ${error.message}`, 'error');
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '🔮 Divine Meaning';
+            }
+        }
+
+        // Clear input
+        function clearInput() {
+            document.getElementById('dreamInput').value = '';
+            document.getElementById('analysisOutput').textContent = 'Summon the Oracle to begin unveiling the mysteries within your dreams...\n\n🔮 The Oracle shall divine:\n• Hidden symbolic meanings\n• Psychological depths and truths\n• Emotional currents and themes\n• Personal insights and guidance\n• Sacred wisdom for your path\n\nClick "Summon Oracle" to awaken the ancient wisdom!';
+            showToast('🌟 Vision cleared from the ethereal canvas', 'info');
+        }
+
+        // Load example dream
+        function loadExample(dreamText) {
+            document.getElementById('dreamInput').value = dreamText;
+            showToast('🌌 Sacred vision summoned for divination', 'info');
+        }
+    </script>
+</body>
+</html>
